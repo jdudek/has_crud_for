@@ -68,6 +68,10 @@ module HasCrudFor
       send("find_#{parent}", parent_id).send("create_#{model_name}", hash)
     end if methods.include?(:create)
 
+    define_method "create_#{name}!".to_sym do |parent_id, hash = {}|
+      send("find_#{parent}", parent_id).send("create_#{model_name}!", hash)
+    end if methods.include?(:create)
+
     define_method "update_#{name}".to_sym do |parent_id, id, hash|
       send("find_#{parent}", parent_id).send("update_#{model_name}", id, hash)
     end if methods.include?(:update)

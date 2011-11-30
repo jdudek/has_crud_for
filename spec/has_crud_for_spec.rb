@@ -75,6 +75,11 @@ describe HasCrudFor do
       @subject.create_child(@parent_id, @attributes)
     end
 
+    it "should have create_child!" do
+      @parent.should_receive(:create_child!).with(@attributes)
+      @subject.create_child!(@parent_id, @attributes)
+    end
+
     it "should have update_child" do
       @parent.should_receive(:update_child).with(@child_id, @attributes)
       @subject.update_child(@parent_id, @child_id, @attributes)
