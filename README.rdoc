@@ -66,7 +66,7 @@ HasCrudFor is a small meta-programming snippet that adds find_*, build_*, create
 
 * Do I need to use ActiveRecord? Or Rails?
 
-  No. But HasCrudFor depends on inflections from ActiveSupport. And that pulls i18n gem as well.
+  No. But HasCrudFor depends on inflections from ActiveSupport.
 
 == License
 
