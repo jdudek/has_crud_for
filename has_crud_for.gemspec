@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Jan Dudek"]
   s.email       = ["jd@jandudek.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Law of Demeter in ActiveRecord models}
+  s.description = %q{HasCrudFor is a small meta-programming snippet that adds find_*, build_*, create_*, update_* and destroy_* methods intended as a better API for your associations}
 
   s.rubyforge_project = "has_crud_for"
 
