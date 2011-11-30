@@ -82,3 +82,7 @@ module HasCrudFor
     end if methods.include?(:destroy)
   end
 end
+
+if defined?(ActiveRecord)
+  ActiveRecord::Base.extend(HasCrudFor)
+end

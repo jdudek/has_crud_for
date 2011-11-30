@@ -9,15 +9,12 @@ HasCrudFor is a small meta-programming snippet that adds find_*, build_*, create
   class Blog < ActiveRecord::Base
     has_many :posts
 
-    extend HasCrudFor
     has_crud_for :posts
     has_crud_for :comments, :through => :posts
   end
 
   class Post
     has_many :comments
-
-    extend HasCrudFor
     has_crud_for :comments
   end
 
