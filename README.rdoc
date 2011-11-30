@@ -1,0 +1,70 @@
+= HasCrudFor
+
+Follow Law of Demeter in ActiveRecord models.
+
+HasCrudFor is a small meta-programming snippet that adds find_*, build_*, create_*, update_* and destroy_* methods intended as a better API for your associations.
+
+== Example
+
+  class Blog < ActiveRecord::Base
+    has_many :posts
+
+    extend HasCrudFor
+    has_crud_for :posts
+    has_crud_for :comments, :through => :posts
+  end
+
+  class Post
+    has_many :comments
+  end
+
+  blog.create_post(post_attributes)
+  blog.build_post(post_attributes)
+  blog.create_comment(post_id, comment_attributes)
+  blog.create_comment!(post_id, comment_attributes)  # will raise exception upon failed validation
+
+== Benefits
+
+* easily delegate methods to other objects:
+
+    class User
+      belongs_to :blog
+      delegate :create_post, :to => :blog
+    end
+
+* replace methods with own implementation
+
+    class Blog
+      has_crud_for :posts
+
+      def create_post(attributes)
+        posts.create(attributes).tap { |post| post.publish! }
+      end
+    end
+
+  You can do whatever you need when creating new post, without hunting for blog.posts.create through your codebase! And without resorting to ActiveRecord callbacks.
+
+* less coupling - objects don't have to know about internal structure of other objects
+
+* easier to mock in tests
+
+== Options
+
+* :only, :except - specify which methods should be generated; please note that :create generates two methods: create_* and create_*!
+    has_crud_for :posts, :only => [:find, :create]
+    has_crud_for :posts, :except => [:destroy]
+* :as - use different prefix in method names
+    has_crud_for :posts, :as => :entries # generates methods create_entry, build_entry, etc.
+* :through - create methods for nested associations
+    has_crud_for :comments, :through => :posts
+    has_crud_for :comments, :through => :posts, :as => :posts_comments
+
+== FAQ
+
+* Do I need to use ActiveRecord? Or Rails?
+
+  No. But HasCrudFor depends on inflections from ActiveSupport. And that pulls i18n gem as well.
+
+== License
+
+This project rocks and uses MIT-LICENSE.
