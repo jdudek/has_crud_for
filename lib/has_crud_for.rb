@@ -1,6 +1,7 @@
 require "has_crud_for/version"
-require "active_support/core_ext/string/inflections"
-require 'active_support/core_ext/module/introspection'
+require "active_support/inflector/inflections"
+require "active_support/inflector/methods"
+require 'active_support/inflections'
 
 module HasCrudFor
   DEFAULT_METHODS = [:find, :build, :create, :update, :destroy]
@@ -16,9 +17,9 @@ module HasCrudFor
       end
     end
 
-    name = (options[:as] || models).to_s.singularize
+    name = ActiveSupport::Inflector.singularize((options[:as] || models).to_s)
     if through = options[:through]
-      parent = through.to_s.singularize
+      parent = ActiveSupport::Inflector.singularize(through.to_s)
       define_crud_through_methods(models, name, parent, methods)
     else
       define_crud_methods(models, name, methods)
@@ -54,7 +55,7 @@ module HasCrudFor
   end
 
   def define_crud_through_methods(models, name, parent, methods = [])
-    model_name = models.to_s.singularize
+    model_name = ActiveSupport::Inflector.singularize(models.to_s)
 
     define_method "find_#{name}".to_sym do |parent_id, id|
       send("find_#{parent}", parent_id).send("find_#{model_name}", id)
