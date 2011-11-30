@@ -2,13 +2,12 @@ require File.dirname(__FILE__) + "/../lib/has_crud_for"
 
 describe HasCrudFor do
   describe "without :through" do
-    class TestSubjectWithoutThrough
-      extend HasCrudFor
-      has_crud_for :items
-    end
-
     before do
-      @subject = TestSubjectWithoutThrough.new
+      klass = Class.new do
+        extend HasCrudFor
+        has_crud_for :items
+      end
+      @subject = klass.new
       @items = mock
       @subject.stub!(:items).and_return(@items)
       @id = 1
@@ -47,13 +46,12 @@ describe HasCrudFor do
   end
 
   describe "with :through" do
-    class TestSubjectWithThrough
-      extend HasCrudFor
-      has_crud_for :children, :through => :parents
-    end
-
     before do
-      @subject = TestSubjectWithThrough.new
+      klass = Class.new do
+        extend HasCrudFor
+        has_crud_for :children, :through => :parents
+      end
+      @subject = klass.new
       @parent_id = 1
       @child_id = 2
       @attributes = {}
@@ -89,12 +87,12 @@ describe HasCrudFor do
   end
 
   describe "with :except" do
-    class TestSubjectWithExcept
+    klass = Class.new do
       extend HasCrudFor
       has_crud_for :items, :except => [:update, :destroy]
     end
 
-    subject { TestSubjectWithExcept.new }
+    subject { klass.new }
 
     it { should respond_to :find_item }
     it { should respond_to :build_item }
@@ -104,12 +102,12 @@ describe HasCrudFor do
   end
 
   describe "with :only" do
-    class TestSubjectWithOnly
+    klass = Class.new do
       extend HasCrudFor
       has_crud_for :items, :only => [:find, :build, :create]
     end
 
-    subject { TestSubjectWithOnly.new }
+    subject { klass.new }
 
     it { should respond_to :find_item }
     it { should respond_to :build_item }
@@ -119,12 +117,12 @@ describe HasCrudFor do
   end
 
   describe "with :as" do
-    class TestSubjectWithAs
+    klass = Class.new do
       extend HasCrudFor
       has_crud_for :items, :as => :things
     end
 
-    subject { TestSubjectWithAs.new }
+    subject { klass.new }
 
     it { should respond_to :find_thing }
     it { should respond_to :build_thing }
