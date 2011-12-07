@@ -135,4 +135,25 @@ describe HasCrudFor do
     it { should respond_to :update_thing }
     it { should respond_to :destroy_thing }
   end
+
+  describe "with method override" do
+    before do
+      klass = Class.new do
+        extend HasCrudFor
+        has_crud_for :items
+
+        def find_item(*)
+          super + 1
+        end
+      end
+      @subject = klass.new
+      @items = mock
+      @subject.stub!(:items).and_return(@items)
+    end
+
+    it "should allow calling overridden method using super" do
+      @items.stub!(:find).and_return(3)
+      @subject.find_item(12).should == 4
+    end
+  end
 end
